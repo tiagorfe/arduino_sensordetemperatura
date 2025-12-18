@@ -26,7 +26,7 @@ volatile bool fazerMedicao = false;
 
 void ISR_RTC() {
   pulsos++;
-  if (pulsos >= 5) {  
+  if (pulsos >= 5) { 
     pulsos = 0;
     fazerMedicao = true;
   }
@@ -49,7 +49,7 @@ void medir() {
   lcd.write(223);
   lcd.print("C ");
   
-  Serial.println(temp, 2);
+  Serial.print(temp, 2);
 }
 
 void ligadesliga() {
@@ -81,7 +81,6 @@ void setup() {
   sensors.begin();
   
   if (!rtc.begin()) {
-    
     lcd.clear();
     lcd.print("ERRO: RTC!");
     while (1);
@@ -105,15 +104,12 @@ void setup() {
 }
 
 void loop() {
- 
   if (Serial.available()) {
     String comando = Serial.readStringUntil('\n');
     comando.trim();
     
     if (comando == "b") {
       
-      
-      // Reseta contadores
       noInterrupts();  
       pulsos = 0;
       fazerMedicao = false;
@@ -133,7 +129,6 @@ void loop() {
       
     } 
     else if (comando == "d") {
-      
       medindo = false;
       lcd.clear();
       lcd.print("Parado");
@@ -143,7 +138,10 @@ void loop() {
   if (!medindo) return;
   
   if (fazerMedicao) {
-    fazerMedicao = false;
+    fazerMedicao = false;  
+    
+    //Serial.print(contador);
+    //Serial.print(" ");
     
     medir();
     
@@ -154,17 +152,14 @@ void loop() {
     
     if (tempAtual >= tempEsperada + 1) {
       testeluna = false;
-      
     }
     if (tempAtual < tempEsperada - 1) {
       testeluna = true;
-      
     }
     
     if (tempAtual >= 75) {
       tempo_1 = 800;
       tempo_2 = 250;
-     
     }
     
     contador++;
